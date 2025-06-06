@@ -1,7 +1,22 @@
 {
+  "name": "soap-calculator",
+  "version": "1.0.0",
+  "description": "Servidor SOAP para calculadora",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "soap",
+    "calculator",
+    "node"
+  ],
+  "author": "Tu Nombre",
+  "license": "ISC",
   "dependencies": {
-    "body-parser": "^2.2.0",
-    "express": "^5.1.0",
-    "soap": "^1.1.12"
+    "body-parser": "^1.20.2",
+    "express": "^4.18.2",
+    "soap": "^1.0.0"
   }
 }

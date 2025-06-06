@@ -5,57 +5,42 @@ const fs = require('fs');
 const path = require('path');
 
 const app = express();
-app.use(bodyParser.raw({ type: 'text/xml' }));
+app.use(bodyParser.raw({ type: function () { return true; }, limit: '5mb' }));
 
-// Servicio de la calculadora
+// Definición del servicio SOAP
 const service = {
     CalculatorService: {
         CalculatorPort: {
-            Add: function(args) {
-                const result = parseFloat(args.number1) + parseFloat(args.number2);
-                return { result: result };
-            },
-            Subtract: function(args) {
-                const result = parseFloat(args.number1) - parseFloat(args.number2);
-                return { result: result };
-            },
-            Multiply: function(args) {
-                const result = parseFloat(args.number1) * parseFloat(args.number2);
-                return { result: result };
-            },
-            Divide: function(args) {
-                const n2 = parseFloat(args.number2);
-                if (n2 === 0) {
-                    throw new Error("Division by zero");
-                }
-                const result = parseFloat(args.number1) / n2;
-                return { result: result };
+            Add: ({ number1, number2 }) => ({ result: parseFloat(number1) + parseFloat(number2) }),
+            Subtract: ({ number1, number2 }) => ({ result: parseFloat(number1) - parseFloat(number2) }),
+            Multiply: ({ number1, number2 }) => ({ result: parseFloat(number1) * parseFloat(number2) }),
+            Divide: ({ number1, number2 }) => {
+                if (parseFloat(number2) === 0) throw new Error('Division by zero');
+                return { result: parseFloat(number1) / parseFloat(number2) };
             }
         }
     }
 };
 
-// Cargar WSDL
+// Leer el WSDL
 const wsdlPath = path.join(__dirname, 'calculator.wsdl');
-const wsdlContent = fs.readFileSync(wsdlPath, 'utf8');
+const wsdlXml = fs.readFileSync(wsdlPath, 'utf8');
 
-// Ruta para el WSDL
-app.get('/calculator.wsdl', function(req, res) {
-    res.type('application/xml');
-    res.send(wsdlContent);
+// Ruta pública del WSDL
+app.get('/calculator.wsdl', (_, res) => {
+    res.type('text/xml');
+    res.send(wsdlXml);
 });
 
-// Configuración para Render
+// Escuchar en el puerto asignado por Render
 const port = process.env.PORT || 8000;
 const host = '0.0.0.0';
 
-// Iniciar servidor SOAP
-const server = app.listen(port, host, function() {
-    console.log(`Servidor SOAP escuchando en http://${host}:${port}`);
-    soap.listen(app, '/calculator', service, wsdlContent);
+const server = app.listen(port, host, () => {
+    console.log(`SOAP service running at http://${host}:${port}`);
+    soap.listen(server, '/calculator', service, wsdlXml);
 });
 
-// Manejo de errores
-server.on('error', function(err) {
-    console.error('Error del servidor:', err);
+server.on('error', (err) => {
+    console.error('Server error:', err);
 });
