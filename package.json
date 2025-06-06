@@ -12,7 +12,7 @@
     "calculator",
     "node"
   ],
-  "author": "Tu Nombre",
+  "author": "Abel Fuentes Guzman",
   "license": "ISC",
   "dependencies": {
     "body-parser": "^1.20.2",
