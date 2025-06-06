@@ -1,153 +1,100 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<definitions name="CalculatorService"
-             targetNamespace="http://example.com/calculator"
-             xmlns="http://schemas.xmlsoap.org/wsdl/"
-             xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
-             xmlns:tns="http://example.com/calculator"
-             xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+<definitions
+    xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
+    xmlns:tns="http://soap-calculator-x9mg.onrender.com"
+    xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+    xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/"
+    xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/"
+    targetNamespace="http://soap-calculator-x9mg.onrender.com"
+    name="CalculatorService">
 
-    <types>
-        <xsd:schema targetNamespace="http://example.com/calculator">
-            <xsd:element name="AddRequest">
-                <xsd:complexType>
-                    <xsd:sequence>
-                        <xsd:element name="number1" type="xsd:float"/>
-                        <xsd:element name="number2" type="xsd:float"/>
-                    </xsd:sequence>
-                </xsd:complexType>
-            </xsd:element>
-            <xsd:element name="AddResponse">
-                <xsd:complexType>
-                    <xsd:sequence>
-                        <xsd:element name="result" type="xsd:float"/>
-                    </xsd:sequence>
-                </xsd:complexType>
-            </xsd:element>
+  <types>
+    <xsd:schema targetNamespace="http://soap-calculator-x9mg.onrender.com">
+      <xsd:element name="addRequest">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element name="number1" type="xsd:int"/>
+            <xsd:element name="number2" type="xsd:int"/>
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="addResponse">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element name="result" type="xsd:int"/>
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
 
-            <xsd:element name="SubtractRequest">
-                <xsd:complexType>
-                    <xsd:sequence>
-                        <xsd:element name="number1" type="xsd:float"/>
-                        <xsd:element name="number2" type="xsd:float"/>
-                    </xsd:sequence>
-                </xsd:complexType>
-            </xsd:element>
-            <xsd:element name="SubtractResponse">
-                <xsd:complexType>
-                    <xsd:sequence>
-                        <xsd:element name="result" type="xsd:float"/>
-                    </xsd:sequence>
-                </xsd:complexType>
-            </xsd:element>
+      <xsd:element name="subtractRequest">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element name="number1" type="xsd:int"/>
+            <xsd:element name="number2" type="xsd:int"/>
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="subtractResponse">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element name="result" type="xsd:int"/>
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+    </xsd:schema>
+  </types>
 
-            <xsd:element name="MultiplyRequest">
-                <xsd:complexType>
-                    <xsd:sequence>
-                        <xsd:element name="number1" type="xsd:float"/>
-                        <xsd:element name="number2" type="xsd:float"/>
-                    </xsd:sequence>
-                </xsd:complexType>
-            </xsd:element>
-            <xsd:element name="MultiplyResponse">
-                <xsd:complexType>
-                    <xsd:sequence>
-                        <xsd:element name="result" type="xsd:float"/>
-                    </xsd:sequence>
-                </xsd:complexType>
-            </xsd:element>
+  <message name="AddRequest">
+    <part name="parameters" element="tns:addRequest"/>
+  </message>
+  <message name="AddResponse">
+    <part name="parameters" element="tns:addResponse"/>
+  </message>
 
-            <xsd:element name="DivideRequest">
-                <xsd:complexType>
-                    <xsd:sequence>
-                        <xsd:element name="number1" type="xsd:float"/>
-                        <xsd:element name="number2" type="xsd:float"/>
-                    </xsd:sequence>
-                </xsd:complexType>
-            </xsd:element>
-            <xsd:element name="DivideResponse">
-                <xsd:complexType>
-                    <xsd:sequence>
-                        <xsd:element name="result" type="xsd:float"/>
-                    </xsd:sequence>
-                </xsd:complexType>
-            </xsd:element>
-        </xsd:schema>
-    </types>
+  <message name="SubtractRequest">
+    <part name="parameters" element="tns:subtractRequest"/>
+  </message>
+  <message name="SubtractResponse">
+    <part name="parameters" element="tns:subtractResponse"/>
+  </message>
 
-    <message name="AddRequest">
-        <part name="parameters" element="tns:AddRequest"/>
-    </message>
-    <message name="AddResponse">
-        <part name="parameters" element="tns:AddResponse"/>
-    </message>
+  <portType name="CalculatorPortType">
+    <operation name="add">
+      <input message="tns:AddRequest"/>
+      <output message="tns:AddResponse"/>
+    </operation>
+    <operation name="subtract">
+      <input message="tns:SubtractRequest"/>
+      <output message="tns:SubtractResponse"/>
+    </operation>
+  </portType>
 
-    <message name="SubtractRequest">
-        <part name="parameters" element="tns:SubtractRequest"/>
-    </message>
-    <message name="SubtractResponse">
-        <part name="parameters" element="tns:SubtractResponse"/>
-    </message>
+  <binding name="CalculatorBinding" type="tns:CalculatorPortType">
+    <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+    <operation name="add">
+      <soap:operation soapAction="http://soap-calculator-x9mg.onrender.com/add"/>
+      <input>
+        <soap:body use="literal"/>
+      </input>
+      <output>
+        <soap:body use="literal"/>
+      </output>
+    </operation>
+    <operation name="subtract">
+      <soap:operation soapAction="http://soap-calculator-x9mg.onrender.com/subtract"/>
+      <input>
+        <soap:body use="literal"/>
+      </input>
+      <output>
+        <soap:body use="literal"/>
+      </output>
+    </operation>
+  </binding>
 
-    <message name="MultiplyRequest">
-        <part name="parameters" element="tns:MultiplyRequest"/>
-    </message>
-    <message name="MultiplyResponse">
-        <part name="parameters" element="tns:MultiplyResponse"/>
-    </message>
+  <service name="CalculatorService">
+    <port name="CalculatorPort" binding="tns:CalculatorBinding">
+      <soap:address location="https://soap-calculator-x9mg.onrender.com/calculator"/>
+    </port>
+  </service>
 
-    <message name="DivideRequest">
-        <part name="parameters" element="tns:DivideRequest"/>
-    </message>
-    <message name="DivideResponse">
-        <part name="parameters" element="tns:DivideResponse"/>
-    </message>
-
-    <portType name="CalculatorPortType">
-        <operation name="Add">
-            <input message="tns:AddRequest"/>
-            <output message="tns:AddResponse"/>
-        </operation>
-        <operation name="Subtract">
-            <input message="tns:SubtractRequest"/>
-            <output message="tns:SubtractResponse"/>
-        </operation>
-        <operation name="Multiply">
-            <input message="tns:MultiplyRequest"/>
-            <output message="tns:MultiplyResponse"/>
-        </operation>
-        <operation name="Divide">
-            <input message="tns:DivideRequest"/>
-            <output message="tns:DivideResponse"/>
-        </operation>
-    </portType>
-
-    <binding name="CalculatorBinding" type="tns:CalculatorPortType">
-        <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
-        <operation name="Add">
-            <soap:operation soapAction="http://example.com/calculator/Add"/>
-            <input><soap:body use="literal"/></input>
-            <output><soap:body use="literal"/></output>
-        </operation>
-        <operation name="Subtract">
-            <soap:operation soapAction="http://example.com/calculator/Subtract"/>
-            <input><soap:body use="literal"/></input>
-            <output><soap:body use="literal"/></output>
-        </operation>
-        <operation name="Multiply">
-            <soap:operation soapAction="http://example.com/calculator/Multiply"/>
-            <input><soap:body use="literal"/></input>
-            <output><soap:body use="literal"/></output>
-        </operation>
-        <operation name="Divide">
-            <soap:operation soapAction="http://example.com/calculator/Divide"/>
-            <input><soap:body use="literal"/></input>
-            <output><soap:body use="literal"/></output>
-        </operation>
-    </binding>
-
-    <service name="CalculatorService">
-        <port name="CalculatorPort" binding="tns:CalculatorBinding">
-            <soap:address location="https://soap-calculator.onrender.com/calculator"/>
-        </port>
-    </service>
 </definitions>
